@@ -6,13 +6,14 @@
  */ 
 
 #include <avr/io.h>
-
+#include "states.h"
 
 int main(void)
 {
-    /* Replace with your application code */
-    while (1) 
+	while (1) 
     {
     }
 }
+
+
 

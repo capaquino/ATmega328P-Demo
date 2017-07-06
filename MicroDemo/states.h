@@ -14,9 +14,8 @@ void I2cState();
 void IdleState();
 
 typedef enum {SPI_STATE, I2C_STATE, IDLE_STATE} DemoState;
-void * state_table[] = {SpiState, I2cState, IdleState};
-DemoState State;
-
+extern DemoState State;
+extern void * state_table[];
 
 
 

@@ -7,6 +7,9 @@
 
 #include "states.h"
 
+void * state_table[] = {SpiState, I2cState, IdleState};
+DemoState State;
+
 void SpiState()
 {
 	
