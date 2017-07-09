@@ -9,11 +9,13 @@
 #ifndef STATES_H_
 #define STATES_H_
 
+typedef enum {SPI_STATE, I2C_STATE, IDLE_STATE} DemoState;
+
 void SpiState();
 void I2cState();
 void IdleState();
 
-typedef enum {SPI_STATE, I2C_STATE, IDLE_STATE} DemoState;
+
 extern DemoState State;
 extern void * state_table[];
 

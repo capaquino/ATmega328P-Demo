@@ -12,6 +12,7 @@ DemoState State;
 
 void SpiState()
 {
+	// Set SPCR
 	
 }
 
