@@ -3,27 +3,31 @@ MicroDemo.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000100  2**0
+  0 .data         00000006  00800100  00000172  00000206  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000ac  00000000  00000000  00000054  2**1
+  1 .text         00000172  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000100  2**0
+  2 .bss          00000001  00800106  00800106  0000020c  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000020c  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000130  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000023c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  00000170  2**0
+  5 .debug_aranges 00000060  00000000  00000000  0000027c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000671  00000000  00000000  00000190  2**0
+  6 .debug_info   00000aaa  00000000  00000000  000002dc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000005eb  00000000  00000000  00000801  2**0
+  7 .debug_abbrev 00000824  00000000  00000000  00000d86  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000016c  00000000  00000000  00000dec  2**0
+  8 .debug_line   0000045b  00000000  00000000  000015aa  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000024  00000000  00000000  00000f58  2**2
+  9 .debug_frame  00000088  00000000  00000000  00001a08  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000033e  00000000  00000000  00000f7c  2**0
+ 10 .debug_str    0000040d  00000000  00000000  00001a90  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000010  00000000  00000000  000012ba  2**0
+ 11 .debug_loc    00000240  00000000  00000000  00001e9d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000040  00000000  00000000  000020dd  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -68,18 +72,18 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	ec ea       	ldi	r30, 0xAC	; 172
-  7c:	f0 e0       	ldi	r31, 0x00	; 0
+  7a:	e2 e7       	ldi	r30, 0x72	; 114
+  7c:	f1 e0       	ldi	r31, 0x01	; 1
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a0 30       	cpi	r26, 0x00	; 0
+  84:	a6 30       	cpi	r26, 0x06	; 6
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a0 e0       	ldi	r26, 0x00	; 0
+  8c:	a6 e0       	ldi	r26, 0x06	; 6
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -87,26 +91,187 @@ Disassembly of section .text:
   92:	1d 92       	st	X+, r1
 
 00000094 <.do_clear_bss_start>:
-  94:	a0 30       	cpi	r26, 0x00	; 0
+  94:	a7 30       	cpi	r26, 0x07	; 7
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
-  9a:	0e 94 53 00 	call	0xa6	; 0xa6 <main>
-  9e:	0c 94 54 00 	jmp	0xa8	; 0xa8 <_exit>
+  9a:	0e 94 62 00 	call	0xc4	; 0xc4 <main>
+  9e:	0c 94 b7 00 	jmp	0x16e	; 0x16e <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-000000a6 <main>:
-
-#include <avr/io.h>
+000000a6 <heartbeat>:
+#include <util/delay.h>
 #include "states.h"
+
+void heartbeat()
+{
+    PORTC |= 0x20;
+  a6:	45 9a       	sbi	0x08, 5	; 8
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  a8:	83 e2       	ldi	r24, 0x23	; 35
+  aa:	94 ef       	ldi	r25, 0xF4	; 244
+  ac:	01 97       	sbiw	r24, 0x01	; 1
+  ae:	f1 f7       	brne	.-4      	; 0xac <heartbeat+0x6>
+  b0:	00 c0       	rjmp	.+0      	; 0xb2 <heartbeat+0xc>
+  b2:	00 00       	nop
+    _delay_ms(250);
+    PORTC &= 0xDF;
+  b4:	45 98       	cbi	0x08, 5	; 8
+  b6:	83 e2       	ldi	r24, 0x23	; 35
+  b8:	94 ef       	ldi	r25, 0xF4	; 244
+  ba:	01 97       	sbiw	r24, 0x01	; 1
+  bc:	f1 f7       	brne	.-4      	; 0xba <heartbeat+0x14>
+  be:	00 c0       	rjmp	.+0      	; 0xc0 <heartbeat+0x1a>
+  c0:	00 00       	nop
+  c2:	08 95       	ret
+
+000000c4 <main>:
+}
 
 int main(void)
 {
-  a6:	ff cf       	rjmp	.-2      	; 0xa6 <main>
+    // State indicator LEDs
+	DDRD = 0xE0;
+  c4:	80 ee       	ldi	r24, 0xE0	; 224
+  c6:	8a b9       	out	0x0a, r24	; 10
+	
+	// Heartbeat
+	DDRC = 0x20;
+  c8:	80 e2       	ldi	r24, 0x20	; 32
+  ca:	87 b9       	out	0x07, r24	; 7
+	
+	while (1) 
+    {
+        heartbeat();
+  cc:	0e 94 53 00 	call	0xa6	; 0xa6 <heartbeat>
+        ReadState();
+  d0:	0e 94 a6 00 	call	0x14c	; 0x14c <ReadState>
+        state_table[State]();
+  d4:	e0 91 06 01 	lds	r30, 0x0106	; 0x800106 <__data_end>
+  d8:	f0 e0       	ldi	r31, 0x00	; 0
+  da:	ee 0f       	add	r30, r30
+  dc:	ff 1f       	adc	r31, r31
+  de:	e0 50       	subi	r30, 0x00	; 0
+  e0:	ff 4f       	sbci	r31, 0xFF	; 255
+  e2:	01 90       	ld	r0, Z+
+  e4:	f0 81       	ld	r31, Z
+  e6:	e0 2d       	mov	r30, r0
+  e8:	09 95       	icall
+  ea:	f0 cf       	rjmp	.-32     	; 0xcc <main+0x8>
 
-000000a8 <_exit>:
-  a8:	f8 94       	cli
+000000ec <SpiState>:
+        State = IDLE_STATE;
+}
 
-000000aa <__stop_program>:
-  aa:	ff cf       	rjmp	.-2      	; 0xaa <__stop_program>
+void SpiState(void)
+{
+	PORTD = 0x20;
+  ec:	80 e2       	ldi	r24, 0x20	; 32
+  ee:	8b b9       	out	0x0b, r24	; 11
+  f0:	83 e2       	ldi	r24, 0x23	; 35
+  f2:	94 ef       	ldi	r25, 0xF4	; 244
+  f4:	01 97       	sbiw	r24, 0x01	; 1
+  f6:	f1 f7       	brne	.-4      	; 0xf4 <SpiState+0x8>
+  f8:	00 c0       	rjmp	.+0      	; 0xfa <SpiState+0xe>
+  fa:	00 00       	nop
+	_delay_ms(250);
+	PORTD = 0x00;
+  fc:	1b b8       	out	0x0b, r1	; 11
+  fe:	83 e2       	ldi	r24, 0x23	; 35
+ 100:	94 ef       	ldi	r25, 0xF4	; 244
+ 102:	01 97       	sbiw	r24, 0x01	; 1
+ 104:	f1 f7       	brne	.-4      	; 0x102 <SpiState+0x16>
+ 106:	00 c0       	rjmp	.+0      	; 0x108 <SpiState+0x1c>
+ 108:	00 00       	nop
+ 10a:	08 95       	ret
+
+0000010c <I2cState>:
+	_delay_ms(250);
+}
+
+void I2cState(void)
+{
+	PORTD = 0x40;
+ 10c:	80 e4       	ldi	r24, 0x40	; 64
+ 10e:	8b b9       	out	0x0b, r24	; 11
+ 110:	83 e2       	ldi	r24, 0x23	; 35
+ 112:	94 ef       	ldi	r25, 0xF4	; 244
+ 114:	01 97       	sbiw	r24, 0x01	; 1
+ 116:	f1 f7       	brne	.-4      	; 0x114 <I2cState+0x8>
+ 118:	00 c0       	rjmp	.+0      	; 0x11a <I2cState+0xe>
+ 11a:	00 00       	nop
+	_delay_ms(250);
+	PORTD = 0x00;
+ 11c:	1b b8       	out	0x0b, r1	; 11
+ 11e:	83 e2       	ldi	r24, 0x23	; 35
+ 120:	94 ef       	ldi	r25, 0xF4	; 244
+ 122:	01 97       	sbiw	r24, 0x01	; 1
+ 124:	f1 f7       	brne	.-4      	; 0x122 <I2cState+0x16>
+ 126:	00 c0       	rjmp	.+0      	; 0x128 <I2cState+0x1c>
+ 128:	00 00       	nop
+ 12a:	08 95       	ret
+
+0000012c <IdleState>:
+	_delay_ms(250);
+}
+
+void IdleState(void)
+{
+	PORTD = 0x80;
+ 12c:	80 e8       	ldi	r24, 0x80	; 128
+ 12e:	8b b9       	out	0x0b, r24	; 11
+ 130:	83 e2       	ldi	r24, 0x23	; 35
+ 132:	94 ef       	ldi	r25, 0xF4	; 244
+ 134:	01 97       	sbiw	r24, 0x01	; 1
+ 136:	f1 f7       	brne	.-4      	; 0x134 <IdleState+0x8>
+ 138:	00 c0       	rjmp	.+0      	; 0x13a <IdleState+0xe>
+ 13a:	00 00       	nop
+	_delay_ms(250);
+	PORTD = 0x00;
+ 13c:	1b b8       	out	0x0b, r1	; 11
+ 13e:	83 e2       	ldi	r24, 0x23	; 35
+ 140:	94 ef       	ldi	r25, 0xF4	; 244
+ 142:	01 97       	sbiw	r24, 0x01	; 1
+ 144:	f1 f7       	brne	.-4      	; 0x142 <IdleState+0x16>
+ 146:	00 c0       	rjmp	.+0      	; 0x148 <IdleState+0x1c>
+ 148:	00 00       	nop
+ 14a:	08 95       	ret
+
+0000014c <ReadState>:
+DemoState State;
+void (*state_table[])() = {SpiState, I2cState, IdleState};
+
+void ReadState(void)
+{
+    if (PINB == (1<<PINB1))
+ 14c:	83 b1       	in	r24, 0x03	; 3
+ 14e:	82 30       	cpi	r24, 0x02	; 2
+ 150:	19 f4       	brne	.+6      	; 0x158 <ReadState+0xc>
+        State = SPI_STATE;
+ 152:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <__data_end>
+ 156:	08 95       	ret
+    else if (PINB == (1<<PINB2))
+ 158:	83 b1       	in	r24, 0x03	; 3
+ 15a:	84 30       	cpi	r24, 0x04	; 4
+ 15c:	21 f4       	brne	.+8      	; 0x166 <ReadState+0x1a>
+        State = I2C_STATE;
+ 15e:	81 e0       	ldi	r24, 0x01	; 1
+ 160:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
+ 164:	08 95       	ret
+    else
+        State = IDLE_STATE;
+ 166:	82 e0       	ldi	r24, 0x02	; 2
+ 168:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
+ 16c:	08 95       	ret
+
+0000016e <_exit>:
+ 16e:	f8 94       	cli
+
+00000170 <__stop_program>:
+ 170:	ff cf       	rjmp	.-2      	; 0x170 <__stop_program>

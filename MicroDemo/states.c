@@ -5,23 +5,45 @@
  *  Author: dornback
  */ 
 
+#define F_CPU 1000000
+
 #include "states.h"
+#include <avr/io.h>
+#include "util/delay.h"
 
-void * state_table[] = {SpiState, I2cState, IdleState};
 DemoState State;
+void (*state_table[])() = {SpiState, I2cState, IdleState};
 
-void SpiState()
+void ReadState(void)
 {
-	// Set SPCR
-	
+    if (PINB == (1<<PINB1))
+        State = SPI_STATE;
+    else if (PINB == (1<<PINB2))
+        State = I2C_STATE;
+    else
+        State = IDLE_STATE;
 }
 
-void I2cState()
+void SpiState(void)
 {
-	
+	PORTD = 0x20;
+	_delay_ms(250);
+	PORTD = 0x00;
+	_delay_ms(250);
 }
 
-void IdleState()
+void I2cState(void)
 {
-	
+	PORTD = 0x40;
+	_delay_ms(250);
+	PORTD = 0x00;
+	_delay_ms(250);
+}
+
+void IdleState(void)
+{
+	PORTD = 0x80;
+	_delay_ms(250);
+	PORTD = 0x00;
+	_delay_ms(250);
 }
