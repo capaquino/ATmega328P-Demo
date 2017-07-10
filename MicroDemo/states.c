@@ -16,9 +16,14 @@ void (*state_table[])() = {SpiState, I2cState, IdleState};
 
 void ReadState(void)
 {
-    if (PINB == (1<<PINB1))
+    uint8_t temp;
+    temp = PINB;
+    
+    // something is wrong with this logic
+    // or electrically something is causing PINB to flip voltages, may need pull down resistors or define their behaviour
+    if ((temp & 0x02) == 0x02)
         State = SPI_STATE;
-    else if (PINB == (1<<PINB2))
+    else if ((temp & 0x04) == 0x04 )
         State = I2C_STATE;
     else
         State = IDLE_STATE;

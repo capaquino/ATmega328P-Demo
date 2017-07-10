@@ -11,25 +11,23 @@
 #include <util/delay.h>
 #include "states.h"
 
-void heartbeat()
-{
-    PORTC |= 0x20;
-    _delay_ms(250);
-    PORTC &= 0xDF;
-    _delay_ms(250);
-}
-
 int main(void)
 {
-    // State indicator LEDs
-	DDRD = 0xE0;
+    DDRB = 0x00; // Inputs
+	DDRC = 0x20; // Heartbeat
+	DDRD = 0xE0; // State indicator LEDs
 	
-	// Heartbeat
-	DDRC = 0x20;
-	
+    for (int i=0; i<10; i++)
+    {
+        PORTC |= 1<<PINC5;
+        _delay_ms(50);
+        PORTC |= 0<<PINC5;
+        _delay_ms(50);
+    }
+    PORTC = 1<<PINC5;
+
 	while (1) 
     {
-        heartbeat();
         ReadState();
         state_table[State]();
     }
