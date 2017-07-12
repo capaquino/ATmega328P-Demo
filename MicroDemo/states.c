@@ -19,10 +19,9 @@ void ReadState(void)
     uint8_t temp;
     temp = PINB;
     
-    // something is wrong with this logic
-    // or electrically something is causing PINB to flip voltages, may need pull down resistors or define their behaviour
-    if ((temp & 0x02) == 0x02)
-        State = SPI_STATE;
+    /* This is flawed.  If PB1 and PB2 are HIGH, it will still go to SPI State and not IDLE State */
+    if ((temp & 0x02) == 0x02)  
+        State = SPI_STATE;      
     else if ((temp & 0x04) == 0x04 )
         State = I2C_STATE;
     else
