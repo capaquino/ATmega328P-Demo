@@ -9,7 +9,8 @@
 
 #include "states.h"
 #include <avr/io.h>
-#include "util/delay.h"
+#include "util/delay.h" // TODO move this to led.c/h
+#include "spi.h"
 
 DemoState State;
 void (*state_table[])() = {SpiState, I2cState, IdleState};
@@ -30,6 +31,9 @@ void ReadState(void)
 
 void SpiState(void)
 {
+    SPIWrite(0x01);
+    
+    
 	PORTD = 0x20;
 	_delay_ms(250);
 	PORTD = 0x00;
@@ -51,3 +55,13 @@ void IdleState(void)
 	PORTD = 0x00;
 	_delay_ms(250);
 }
+
+    // possible way to call SPIMasterInit() here to allow pin sharing if needed
+    // and allow initialization code to be run only once when you switch states
+    // I2cStateFlag = 0;
+    // IdleStateFlag = 0;
+    // if (SpiStateFlag = 0)
+    // {
+    //     SpiStateFlag = 1;
+    //     SPIMasterInit();
+    // }

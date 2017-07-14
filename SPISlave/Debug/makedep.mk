@@ -6,5 +6,3 @@ main.c
 
 spi.c
 
-states.c
-

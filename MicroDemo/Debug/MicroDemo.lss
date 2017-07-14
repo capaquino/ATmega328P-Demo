@@ -3,31 +3,31 @@ MicroDemo.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000006  00800100  00000152  000001e6  2**0
+  0 .data         00000006  00800100  00000172  00000206  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000152  00000000  00000000  00000094  2**1
+  1 .text         00000172  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000001  00800106  00800106  000001ec  2**0
+  2 .bss          00000001  00800106  00800106  0000020c  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000001ec  2**0
+  3 .comment      00000030  00000000  00000000  0000020c  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000021c  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000023c  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000058  00000000  00000000  0000025c  2**0
+  5 .debug_aranges 00000090  00000000  00000000  0000027c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000009e2  00000000  00000000  000002b4  2**0
+  6 .debug_info   00000af7  00000000  00000000  0000030c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000078c  00000000  00000000  00000c96  2**0
+  7 .debug_abbrev 00000845  00000000  00000000  00000e03  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000003cc  00000000  00000000  00001422  2**0
+  8 .debug_line   000004f8  00000000  00000000  00001648  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000078  00000000  00000000  000017f0  2**2
+  9 .debug_frame  000000cc  00000000  00000000  00001b40  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000408  00000000  00000000  00001868  2**0
+ 10 .debug_str    00000444  00000000  00000000  00001c0c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000001ce  00000000  00000000  00001c70  2**0
+ 11 .debug_loc    000001ce  00000000  00000000  00002050  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000038  00000000  00000000  00001e3e  2**0
+ 12 .debug_ranges 00000060  00000000  00000000  0000221e  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -72,7 +72,7 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e2 e5       	ldi	r30, 0x52	; 82
+  7a:	e2 e7       	ldi	r30, 0x72	; 114
   7c:	f1 e0       	ldi	r31, 0x01	; 1
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
@@ -95,17 +95,17 @@ Disassembly of section .text:
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 53 00 	call	0xa6	; 0xa6 <main>
-  9e:	0c 94 a7 00 	jmp	0x14e	; 0x14e <_exit>
+  9e:	0c 94 b7 00 	jmp	0x16e	; 0x16e <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000a6 <main>:
-#include <util/delay.h>
-#include "states.h"
+
 
 int main(void)
 {
+    // TODO move these to led.c/h
     DDRB = 0x00; // Inputs
   a6:	14 b8       	out	0x04, r1	; 4
 	DDRC = 0x20; // Heartbeat
@@ -116,139 +116,175 @@ int main(void)
   ae:	9a b9       	out	0x0a, r25	; 10
     PORTC = 1<<PINC5;
   b0:	88 b9       	out	0x08, r24	; 8
+    
+    SPIMasterInit(); // TODO probably won't need this
+  b2:	0e 94 69 00 	call	0xd2	; 0xd2 <SPIMasterInit>
 
 	while (1) 
     {
         ReadState();
-  b2:	0e 94 97 00 	call	0x12e	; 0x12e <ReadState>
+  b6:	0e 94 a7 00 	call	0x14e	; 0x14e <ReadState>
         state_table[State]();
-  b6:	e0 91 06 01 	lds	r30, 0x0106	; 0x800106 <__data_end>
-  ba:	f0 e0       	ldi	r31, 0x00	; 0
-  bc:	ee 0f       	add	r30, r30
-  be:	ff 1f       	adc	r31, r31
-  c0:	e0 50       	subi	r30, 0x00	; 0
-  c2:	ff 4f       	sbci	r31, 0xFF	; 255
-  c4:	01 90       	ld	r0, Z+
-  c6:	f0 81       	ld	r31, Z
-  c8:	e0 2d       	mov	r30, r0
-  ca:	09 95       	icall
-  cc:	f2 cf       	rjmp	.-28     	; 0xb2 <main+0xc>
+  ba:	e0 91 06 01 	lds	r30, 0x0106	; 0x800106 <__data_end>
+  be:	f0 e0       	ldi	r31, 0x00	; 0
+  c0:	ee 0f       	add	r30, r30
+  c2:	ff 1f       	adc	r31, r31
+  c4:	e0 50       	subi	r30, 0x00	; 0
+  c6:	ff 4f       	sbci	r31, 0xFF	; 255
+  c8:	01 90       	ld	r0, Z+
+  ca:	f0 81       	ld	r31, Z
+  cc:	e0 2d       	mov	r30, r0
+  ce:	09 95       	icall
+  d0:	f2 cf       	rjmp	.-28     	; 0xb6 <main+0x10>
 
-000000ce <SpiState>:
-        State = IDLE_STATE;
+000000d2 <SPIMasterInit>:
 }
 
-void SpiState(void)
+void SPISlaveInit()
 {
-	PORTD = 0x20;
-  ce:	80 e2       	ldi	r24, 0x20	; 32
-  d0:	8b b9       	out	0x0b, r24	; 11
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
+    DDRB |= (1<<MISO);
+    SPCR = (1<<SPE) | (0<<MSTR);
+  d2:	84 b1       	in	r24, 0x04	; 4
+  d4:	88 62       	ori	r24, 0x28	; 40
+  d6:	84 b9       	out	0x04, r24	; 4
+  d8:	80 e5       	ldi	r24, 0x50	; 80
+  da:	8c bd       	out	0x2c, r24	; 44
+  dc:	08 95       	ret
 
-	__builtin_avr_delay_cycles(__ticks_dc);
-  d2:	83 e2       	ldi	r24, 0x23	; 35
-  d4:	94 ef       	ldi	r25, 0xF4	; 244
-  d6:	01 97       	sbiw	r24, 0x01	; 1
-  d8:	f1 f7       	brne	.-4      	; 0xd6 <SpiState+0x8>
-  da:	00 c0       	rjmp	.+0      	; 0xdc <SpiState+0xe>
-  dc:	00 00       	nop
-	_delay_ms(250);
-	PORTD = 0x00;
-  de:	1b b8       	out	0x0b, r1	; 11
-  e0:	83 e2       	ldi	r24, 0x23	; 35
-  e2:	94 ef       	ldi	r25, 0xF4	; 244
-  e4:	01 97       	sbiw	r24, 0x01	; 1
-  e6:	f1 f7       	brne	.-4      	; 0xe4 <SpiState+0x16>
-  e8:	00 c0       	rjmp	.+0      	; 0xea <SpiState+0x1c>
-  ea:	00 00       	nop
-  ec:	08 95       	ret
+000000de <SPIWrite>:
+}
 
-000000ee <I2cState>:
+void SPIWrite(char data)
+{
+    SPDR = data;
+  de:	8e bd       	out	0x2e, r24	; 46
+    while( !(SPSR & (1<<SPIF) ));       // Wait, SPIF is set 1 on transfer complete
+  e0:	0d b4       	in	r0, 0x2d	; 45
+  e2:	07 fe       	sbrs	r0, 7
+  e4:	fd cf       	rjmp	.-6      	; 0xe0 <SPIWrite+0x2>
+}
+  e6:	08 95       	ret
+
+000000e8 <I2cState>:
 	_delay_ms(250);
 }
 
 void I2cState(void)
 {
 	PORTD = 0x40;
-  ee:	80 e4       	ldi	r24, 0x40	; 64
-  f0:	8b b9       	out	0x0b, r24	; 11
-  f2:	83 e2       	ldi	r24, 0x23	; 35
-  f4:	94 ef       	ldi	r25, 0xF4	; 244
-  f6:	01 97       	sbiw	r24, 0x01	; 1
-  f8:	f1 f7       	brne	.-4      	; 0xf6 <I2cState+0x8>
-  fa:	00 c0       	rjmp	.+0      	; 0xfc <I2cState+0xe>
-  fc:	00 00       	nop
+  e8:	80 e4       	ldi	r24, 0x40	; 64
+  ea:	8b b9       	out	0x0b, r24	; 11
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  ec:	83 e2       	ldi	r24, 0x23	; 35
+  ee:	94 ef       	ldi	r25, 0xF4	; 244
+  f0:	01 97       	sbiw	r24, 0x01	; 1
+  f2:	f1 f7       	brne	.-4      	; 0xf0 <I2cState+0x8>
+  f4:	00 c0       	rjmp	.+0      	; 0xf6 <I2cState+0xe>
+  f6:	00 00       	nop
 	_delay_ms(250);
 	PORTD = 0x00;
-  fe:	1b b8       	out	0x0b, r1	; 11
- 100:	83 e2       	ldi	r24, 0x23	; 35
- 102:	94 ef       	ldi	r25, 0xF4	; 244
- 104:	01 97       	sbiw	r24, 0x01	; 1
- 106:	f1 f7       	brne	.-4      	; 0x104 <I2cState+0x16>
- 108:	00 c0       	rjmp	.+0      	; 0x10a <I2cState+0x1c>
- 10a:	00 00       	nop
- 10c:	08 95       	ret
+  f8:	1b b8       	out	0x0b, r1	; 11
+  fa:	83 e2       	ldi	r24, 0x23	; 35
+  fc:	94 ef       	ldi	r25, 0xF4	; 244
+  fe:	01 97       	sbiw	r24, 0x01	; 1
+ 100:	f1 f7       	brne	.-4      	; 0xfe <I2cState+0x16>
+ 102:	00 c0       	rjmp	.+0      	; 0x104 <I2cState+0x1c>
+ 104:	00 00       	nop
+ 106:	08 95       	ret
 
-0000010e <IdleState>:
+00000108 <IdleState>:
 	_delay_ms(250);
 }
 
 void IdleState(void)
 {
 	PORTD = 0x80;
- 10e:	80 e8       	ldi	r24, 0x80	; 128
- 110:	8b b9       	out	0x0b, r24	; 11
- 112:	83 e2       	ldi	r24, 0x23	; 35
- 114:	94 ef       	ldi	r25, 0xF4	; 244
- 116:	01 97       	sbiw	r24, 0x01	; 1
- 118:	f1 f7       	brne	.-4      	; 0x116 <IdleState+0x8>
- 11a:	00 c0       	rjmp	.+0      	; 0x11c <IdleState+0xe>
- 11c:	00 00       	nop
+ 108:	80 e8       	ldi	r24, 0x80	; 128
+ 10a:	8b b9       	out	0x0b, r24	; 11
+ 10c:	83 e2       	ldi	r24, 0x23	; 35
+ 10e:	94 ef       	ldi	r25, 0xF4	; 244
+ 110:	01 97       	sbiw	r24, 0x01	; 1
+ 112:	f1 f7       	brne	.-4      	; 0x110 <IdleState+0x8>
+ 114:	00 c0       	rjmp	.+0      	; 0x116 <IdleState+0xe>
+ 116:	00 00       	nop
 	_delay_ms(250);
 	PORTD = 0x00;
- 11e:	1b b8       	out	0x0b, r1	; 11
- 120:	83 e2       	ldi	r24, 0x23	; 35
- 122:	94 ef       	ldi	r25, 0xF4	; 244
- 124:	01 97       	sbiw	r24, 0x01	; 1
- 126:	f1 f7       	brne	.-4      	; 0x124 <IdleState+0x16>
- 128:	00 c0       	rjmp	.+0      	; 0x12a <IdleState+0x1c>
- 12a:	00 00       	nop
- 12c:	08 95       	ret
+ 118:	1b b8       	out	0x0b, r1	; 11
+ 11a:	83 e2       	ldi	r24, 0x23	; 35
+ 11c:	94 ef       	ldi	r25, 0xF4	; 244
+ 11e:	01 97       	sbiw	r24, 0x01	; 1
+ 120:	f1 f7       	brne	.-4      	; 0x11e <IdleState+0x16>
+ 122:	00 c0       	rjmp	.+0      	; 0x124 <IdleState+0x1c>
+ 124:	00 00       	nop
+ 126:	08 95       	ret
 
-0000012e <ReadState>:
+00000128 <SpiState>:
+        State = IDLE_STATE;
+}
+
+void SpiState(void)
+{
+    SPIWrite(0x01);
+ 128:	81 e0       	ldi	r24, 0x01	; 1
+ 12a:	0e 94 6f 00 	call	0xde	; 0xde <SPIWrite>
+    
+    
+	PORTD = 0x20;
+ 12e:	80 e2       	ldi	r24, 0x20	; 32
+ 130:	8b b9       	out	0x0b, r24	; 11
+ 132:	83 e2       	ldi	r24, 0x23	; 35
+ 134:	94 ef       	ldi	r25, 0xF4	; 244
+ 136:	01 97       	sbiw	r24, 0x01	; 1
+ 138:	f1 f7       	brne	.-4      	; 0x136 <SpiState+0xe>
+ 13a:	00 c0       	rjmp	.+0      	; 0x13c <SpiState+0x14>
+ 13c:	00 00       	nop
+	_delay_ms(250);
+	PORTD = 0x00;
+ 13e:	1b b8       	out	0x0b, r1	; 11
+ 140:	83 e2       	ldi	r24, 0x23	; 35
+ 142:	94 ef       	ldi	r25, 0xF4	; 244
+ 144:	01 97       	sbiw	r24, 0x01	; 1
+ 146:	f1 f7       	brne	.-4      	; 0x144 <SpiState+0x1c>
+ 148:	00 c0       	rjmp	.+0      	; 0x14a <SpiState+0x22>
+ 14a:	00 00       	nop
+ 14c:	08 95       	ret
+
+0000014e <ReadState>:
 void (*state_table[])() = {SpiState, I2cState, IdleState};
 
 void ReadState(void)
 {
     uint8_t temp;
     temp = PINB;
- 12e:	83 b1       	in	r24, 0x03	; 3
+ 14e:	83 b1       	in	r24, 0x03	; 3
     
     /* This is flawed.  If PB1 and PB2 are HIGH, it will still go to SPI State and not IDLE State */
     if ((temp & 0x02) == 0x02)  
- 130:	81 ff       	sbrs	r24, 1
- 132:	03 c0       	rjmp	.+6      	; 0x13a <ReadState+0xc>
+ 150:	81 ff       	sbrs	r24, 1
+ 152:	03 c0       	rjmp	.+6      	; 0x15a <ReadState+0xc>
         State = SPI_STATE;      
- 134:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <__data_end>
- 138:	08 95       	ret
+ 154:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <__data_end>
+ 158:	08 95       	ret
     else if ((temp & 0x04) == 0x04 )
- 13a:	82 ff       	sbrs	r24, 2
- 13c:	04 c0       	rjmp	.+8      	; 0x146 <ReadState+0x18>
+ 15a:	82 ff       	sbrs	r24, 2
+ 15c:	04 c0       	rjmp	.+8      	; 0x166 <ReadState+0x18>
         State = I2C_STATE;
- 13e:	81 e0       	ldi	r24, 0x01	; 1
- 140:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
- 144:	08 95       	ret
+ 15e:	81 e0       	ldi	r24, 0x01	; 1
+ 160:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
+ 164:	08 95       	ret
     else
         State = IDLE_STATE;
- 146:	82 e0       	ldi	r24, 0x02	; 2
- 148:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
- 14c:	08 95       	ret
+ 166:	82 e0       	ldi	r24, 0x02	; 2
+ 168:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
+ 16c:	08 95       	ret
 
-0000014e <_exit>:
- 14e:	f8 94       	cli
+0000016e <_exit>:
+ 16e:	f8 94       	cli
 
-00000150 <__stop_program>:
- 150:	ff cf       	rjmp	.-2      	; 0x150 <__stop_program>
+00000170 <__stop_program>:
+ 170:	ff cf       	rjmp	.-2      	; 0x170 <__stop_program>
