@@ -7,32 +7,29 @@
 
 #include <avr/io.h>
 #include "spi.h"
+#include "led.h"
 
 
 int main(void)
 {
     DDRD = 0x01;
     DDRC = 0x20;
-    PORTC = 1<<PINC5;
+    SET_BIT(PORTC, 5);
     
     SPISlaveInit();
-    char temp;
     
     while (1) 
     {
-        temp = PINB;
-        if ((temp & 0x02) == 0x02)
+        // Almost could use this if it weren't for SPIWrite(0x02)
+        // COND_WRITE_BIT(SPIRead() == 0x01, PORTD, 0);
+        if (SPIRead() ==  0x01)
         {
-            if (SPIRead() ==  0x01)
-            {
-                PORTD = 0x01;
-                SPIWrite(0x02);
-            }
-        }    
+            SET_BIT(PORTD, 0);
+            SPIWrite(0x02);
+        }
         else
         {
-            PORTD = 0x00;        
-        }            
+            CLR_BIT(PORTD, 0);
+        }         
     }           
 }
-

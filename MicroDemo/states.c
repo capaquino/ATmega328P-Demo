@@ -5,12 +5,10 @@
  *  Author: dornback
  */ 
 
-#define F_CPU 1000000
-
-#include "states.h"
 #include <avr/io.h>
-#include "util/delay.h" // TODO move this to led.c/h
+#include "states.h"
 #include "spi.h"
+#include "led.h"
 
 DemoState State;
 void (*state_table[])() = {SpiState, I2cState, IdleState};
@@ -32,34 +30,24 @@ void ReadState(void)
 void SpiState(void)
 {
     SPIWrite(0x01);
-    char read = SPIRead();
-    if (read == 0x02)
-        PORTD |= 1<<PIND0;
-    else
-        PORTD &= ~(1<<PIND0);
-    
-    
-	PORTD |= 0x20;
-	_delay_ms(200);
-	PORTD &= ~0x20;
-	_delay_ms(200);
+    COND_WRITE_BIT(SPIRead() == 0x02, PORTD, 0);
+    Blink_LED(&PORTD, 5);
 }
 
 void I2cState(void)
 {
-	PORTD |= 0x40;
-	_delay_ms(200);
-	PORTD &= ~0x40;
-	_delay_ms(200);
+    Blink_LED(&PORTD, 6);
 }
 
 void IdleState(void)
 {
-	PORTD |= 0x80;
-	_delay_ms(200);
-	PORTD &= ~0x80;
-	_delay_ms(200);
+    Blink_LED(&PORTD, 7);
 }
+
+
+
+
+
     // Need a state reset function upon entry to new state
 
     // possible way to call SPIMasterInit() here to allow pin sharing if needed

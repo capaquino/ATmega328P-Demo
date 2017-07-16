@@ -5,21 +5,18 @@
  * Author : dornback
  */ 
 
-#define F_CPU 1000000
-
 #include <avr/io.h>
-#include <util/delay.h>
 #include "states.h"
 #include "spi.h" // TODO probably won't need this
-
+#include "led.h"
 
 int main(void)
 {
-    // TODO move these to led.c/h
+    // TODO move these to general purpose init()
     DDRB = 0x00; // Inputs
 	DDRC = 0x20; // ON Indicator LED
 	DDRD = 0xE1; // State indicator LEDs
-    PORTC = 1<<PINC5;
+    SET_BIT(PORTC, 5);
 
     SPIMasterInit();
 

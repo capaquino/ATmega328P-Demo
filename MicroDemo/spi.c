@@ -17,7 +17,7 @@ void SPIMasterInit()
 void SPISlaveInit()
 {
     DDRB = (1<<MISO);
-    SPCR = (1<<SPE);//| (0<<MSTR);
+    SPCR = (1<<SPE);
 }
 
 void SPIWrite(char data)
