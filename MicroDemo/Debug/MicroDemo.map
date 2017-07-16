@@ -23,8 +23,7 @@ Discarded input sections
  .data          0x00000000        0x0 spi.o
  .bss           0x00000000        0x0 spi.o
  .text.SPISlaveInit
-                0x00000000        0x8 spi.o
- .text.SPIRead  0x00000000        0xa spi.o
+                0x00000000        0xa spi.o
  .text          0x00000000        0x0 states.o
  .data          0x00000000        0x0 states.o
  .bss           0x00000000        0x0 states.o
@@ -203,7 +202,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x172
+.text           0x00000000      0x186
  *(.vectors)
  .vectors       0x00000000       0x68 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -298,23 +297,25 @@ END GROUP
  .text.SPIWrite
                 0x000000de        0xa spi.o
                 0x000000de                SPIWrite
+ .text.SPIRead  0x000000e8        0xa spi.o
+                0x000000e8                SPIRead
  .text.I2cState
-                0x000000e8       0x20 states.o
-                0x000000e8                I2cState
+                0x000000f2       0x1e states.o
+                0x000000f2                I2cState
  .text.IdleState
-                0x00000108       0x20 states.o
-                0x00000108                IdleState
+                0x00000110       0x1e states.o
+                0x00000110                IdleState
  .text.SpiState
-                0x00000128       0x26 states.o
-                0x00000128                SpiState
+                0x0000012e       0x34 states.o
+                0x0000012e                SpiState
  .text.ReadState
-                0x0000014e       0x20 states.o
-                0x0000014e                ReadState
-                0x0000016e                . = ALIGN (0x2)
+                0x00000162       0x20 states.o
+                0x00000162                ReadState
+                0x00000182                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000016e        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x0000016e                _exit
-                0x0000016e                exit
+ .fini9         0x00000182        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00000182                _exit
+                0x00000182                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -333,11 +334,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000016e        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00000182        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000172                _etext = .
+                0x00000186                _etext = .
 
-.data           0x00800100        0x6 load address 0x00000172
+.data           0x00800100        0x6 load address 0x00000186
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -359,8 +360,8 @@ END GROUP
  COMMON         0x00800106        0x1 states.o
                 0x00800106                State
                 0x00800107                PROVIDE (__bss_end, .)
-                0x00000172                __data_load_start = LOADADDR (.data)
-                0x00000178                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000186                __data_load_start = LOADADDR (.data)
+                0x0000018c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800107        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -445,26 +446,26 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xaf7
+.debug_info     0x00000000      0xb27
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4      0x115 main.o
  .debug_info    0x00000709       0xdf spi.o
- .debug_info    0x000007e8      0x30f states.o
+ .debug_info    0x000007e8      0x33f states.o
 
-.debug_abbrev   0x00000000      0x845
+.debug_abbrev   0x00000000      0x852
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2       0xc1 main.o
  .debug_abbrev  0x00000663       0x90 spi.o
- .debug_abbrev  0x000006f3      0x152 states.o
+ .debug_abbrev  0x000006f3      0x15f states.o
 
-.debug_line     0x00000000      0x4f8
+.debug_line     0x00000000      0x510
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x133 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000133       0xe2 main.o
  .debug_line    0x00000215      0x10e spi.o
- .debug_line    0x00000323      0x1d5 states.o
+ .debug_line    0x00000323      0x1ed states.o
 
 .debug_frame    0x00000000       0xcc
  *(.debug_frame)
@@ -472,19 +473,19 @@ END GROUP
  .debug_frame   0x00000024       0x54 spi.o
  .debug_frame   0x00000078       0x54 states.o
 
-.debug_str      0x00000000      0x444
+.debug_str      0x00000000      0x449
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x18b main.o
                                 0x1c5 (size before relaxing)
  .debug_str     0x00000393       0x2e spi.o
                                 0x1a2 (size before relaxing)
- .debug_str     0x000003c1       0x83 states.o
-                                0x232 (size before relaxing)
+ .debug_str     0x000003c1       0x88 states.o
+                                0x244 (size before relaxing)
 
-.debug_loc      0x00000000      0x1ce
+.debug_loc      0x00000000      0x1e1
  *(.debug_loc)
- .debug_loc     0x00000000      0x1ce states.o
+ .debug_loc     0x00000000      0x1e1 states.o
 
 .debug_macinfo
  *(.debug_macinfo)

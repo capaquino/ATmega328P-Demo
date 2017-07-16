@@ -17,11 +17,11 @@ int main(void)
 {
     // TODO move these to led.c/h
     DDRB = 0x00; // Inputs
-	DDRC = 0x20; // Heartbeat
-	DDRD = 0xE0; // State indicator LEDs
+	DDRC = 0x20; // ON Indicator LED
+	DDRD = 0xE1; // State indicator LEDs
     PORTC = 1<<PINC5;
-    
-    SPIMasterInit(); // TODO probably won't need this
+
+    SPIMasterInit();
 
 	while (1) 
     {
