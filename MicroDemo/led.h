@@ -15,7 +15,7 @@
 #define SET_BIT(port, ofs)      ((port) |= (1<<ofs))
 #define CLR_BIT(port, ofs)      ((port) &= ~(1<<ofs))
 #define TOGGLE_BIT(port, ofs)   ((port) ^= (1<<ofs))
-#define COND_WRITE_BIT(cond, port, ofs) (cond ? SET_BIT(port, ofs) : CLR_BIT(port, ofs))
+#define WRITE_BIT_IF_TRUE(cond, port, ofs) (cond ? SET_BIT(port, ofs) : CLR_BIT(port, ofs))
 
 void Blink_LED(volatile uint8_t * port, uint8_t pin);
 

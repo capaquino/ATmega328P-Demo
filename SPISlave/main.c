@@ -21,7 +21,7 @@ int main(void)
     while (1) 
     {
         // Almost could use this if it weren't for SPIWrite(0x02)
-        // COND_WRITE_BIT(SPIRead() == 0x01, PORTD, 0);
+        // WRITE_BIT_IF_TRUE(SPIRead() == 0x01, PORTD, 0);
         if (SPIRead() ==  0x01)
         {
             SET_BIT(PORTD, 0);

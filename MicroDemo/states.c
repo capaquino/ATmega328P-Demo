@@ -30,7 +30,7 @@ void ReadState(void)
 void SpiState(void)
 {
     SPIWrite(0x01);
-    COND_WRITE_BIT(SPIRead() == 0x02, PORTD, 0);
+    WRITE_BIT_IF_TRUE(SPIRead() == 0x02, PORTD, 0);
     Blink_LED(&PORTD, 5);
 }
 
