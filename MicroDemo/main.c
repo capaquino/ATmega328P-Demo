@@ -7,13 +7,13 @@
 
 #include <avr/io.h>
 #include "states.h"
-#include "spi.h" // TODO probably won't need this
+#include "spi.h"
 #include "led.h"
 
 int main(void)
 {
     // TODO move these to general purpose init()
-    DDRB = 0x00; // Inputs
+    DDRB = 0x02; // Inputs, and Invalid state led on PB1
 	DDRC = 0x20; // ON Indicator LED
 	DDRD = 0xE1; // State indicator LEDs
     SET_BIT(PORTC, 5);

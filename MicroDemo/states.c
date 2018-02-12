@@ -11,37 +11,45 @@
 #include "led.h"
 
 DemoState State;
-void (*state_table[])() = {SpiState, I2cState, IdleState};
+void (*state_table[])() = {SpiState, I2cState, IdleState, InvalidState};
 
 void ReadState(void)
 {
     uint8_t temp;
     temp = PINC;
     
-    /* This is flawed.  If PB1 and PB2 are HIGH, it will still go to SPI State and not IDLE State */
-    if ((temp & 0x02) == 0x02)  
-        State = SPI_STATE;      
-    else if ((temp & 0x04) == 0x04 )
-        State = I2C_STATE;
-    else
-        State = IDLE_STATE;
+    switch (temp & 0b00000111) // PC0-2
+    {
+        case 0b0001: State = IDLE_STATE;    break; //PC0 hi
+        case 0b0010: State = SPI_STATE;     break; //PC1 hi
+        case 0b0100: State = I2C_STATE;     break; //PC2 hi
+        default: State = INVALID_STATE;
+    }
 }
 
 void SpiState(void)
 {
     SPIWrite(0x01);
-    WRITE_BIT_IF_TRUE(SPIRead() == 0x02, PORTD, 0);
-    Blink_LED(&PORTD, 5);
+    if (SPIRead() ==  0x02)
+    {
+        Blink_LED(&PORTD, 0);
+    }
+    Blink_LED(&PORTD, 6); // state led
 }
 
 void I2cState(void)
 {
-    Blink_LED(&PORTD, 6);
+    Blink_LED(&PORTD, 5); // state led
 }
 
 void IdleState(void)
 {
-    Blink_LED(&PORTD, 7);
+    Blink_LED(&PORTD, 7); // state led
+}
+
+void InvalidState(void)
+{
+    Blink_LED(&PORTB, 0);
 }
 
 

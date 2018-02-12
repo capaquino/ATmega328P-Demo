@@ -20,16 +20,10 @@ int main(void)
     
     while (1) 
     {
-        // Almost could use this if it weren't for SPIWrite(0x02)
-        // WRITE_BIT_IF_TRUE(SPIRead() == 0x01, PORTD, 0);
         if (SPIRead() ==  0x01)
         {
-            SET_BIT(PORTD, 0);
+            Blink_LED(&PORTD, 0);
             SPIWrite(0x02);
         }
-        else
-        {
-            CLR_BIT(PORTD, 0);
-        }         
     }           
 }

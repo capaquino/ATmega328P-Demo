@@ -3,31 +3,31 @@ MicroDemo.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000006  00800100  00000186  0000021a  2**0
+  0 .data         00000008  00800100  000001a6  0000023a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000186  00000000  00000000  00000094  2**1
+  1 .text         000001a6  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000001  00800106  00800106  00000220  2**0
+  2 .bss          00000001  00800108  00800108  00000242  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000220  2**0
+  3 .comment      00000030  00000000  00000000  00000242  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000250  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000274  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000b0  00000000  00000000  00000290  2**0
+  5 .debug_aranges 000000b8  00000000  00000000  000002b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000b3b  00000000  00000000  00000340  2**0
+  6 .debug_info   00000b9a  00000000  00000000  0000036c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000008de  00000000  00000000  00000e7b  2**0
+  7 .debug_abbrev 000008de  00000000  00000000  00000f06  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000587  00000000  00000000  00001759  2**0
+  8 .debug_line   0000058d  00000000  00000000  000017e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000f0  00000000  00000000  00001ce0  2**2
+  9 .debug_frame  00000100  00000000  00000000  00001d74  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000045e  00000000  00000000  00001dd0  2**0
+ 10 .debug_str    00000479  00000000  00000000  00001e74  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000000d6  00000000  00000000  0000222e  2**0
+ 11 .debug_loc    000000cb  00000000  00000000  000022ed  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000070  00000000  00000000  00002304  2**0
+ 12 .debug_ranges 00000078  00000000  00000000  000023b8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -72,18 +72,18 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e6 e8       	ldi	r30, 0x86	; 134
+  7a:	e6 ea       	ldi	r30, 0xA6	; 166
   7c:	f1 e0       	ldi	r31, 0x01	; 1
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a6 30       	cpi	r26, 0x06	; 6
+  84:	a8 30       	cpi	r26, 0x08	; 8
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a6 e0       	ldi	r26, 0x06	; 6
+  8c:	a8 e0       	ldi	r26, 0x08	; 8
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -91,11 +91,11 @@ Disassembly of section .text:
   92:	1d 92       	st	X+, r1
 
 00000094 <.do_clear_bss_start>:
-  94:	a7 30       	cpi	r26, 0x07	; 7
+  94:	a9 30       	cpi	r26, 0x09	; 9
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 6f 00 	call	0xde	; 0xde <main>
-  9e:	0c 94 c1 00 	jmp	0x182	; 0x182 <_exit>
+  9e:	0c 94 d1 00 	jmp	0x1a2	; 0x1a2 <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -151,162 +151,179 @@ void Blink_LED(volatile uint8_t * port, uint8_t pin)
 int main(void)
 {
     // TODO move these to general purpose init()
-    DDRB = 0x00; // Inputs
-  de:	14 b8       	out	0x04, r1	; 4
+    DDRB = 0x02; // Inputs, and Invalid state led on PB1
+  de:	82 e0       	ldi	r24, 0x02	; 2
+  e0:	84 b9       	out	0x04, r24	; 4
 	DDRC = 0x20; // ON Indicator LED
-  e0:	80 e2       	ldi	r24, 0x20	; 32
-  e2:	87 b9       	out	0x07, r24	; 7
+  e2:	80 e2       	ldi	r24, 0x20	; 32
+  e4:	87 b9       	out	0x07, r24	; 7
 	DDRD = 0xE1; // State indicator LEDs
-  e4:	81 ee       	ldi	r24, 0xE1	; 225
-  e6:	8a b9       	out	0x0a, r24	; 10
+  e6:	81 ee       	ldi	r24, 0xE1	; 225
+  e8:	8a b9       	out	0x0a, r24	; 10
     SET_BIT(PORTC, 5);
-  e8:	45 9a       	sbi	0x08, 5	; 8
+  ea:	45 9a       	sbi	0x08, 5	; 8
 
     SPIMasterInit();
-  ea:	0e 94 85 00 	call	0x10a	; 0x10a <SPIMasterInit>
+  ec:	0e 94 86 00 	call	0x10c	; 0x10c <SPIMasterInit>
 
 	while (1) 
     {
         ReadState();
-  ee:	0e 94 b1 00 	call	0x162	; 0x162 <ReadState>
+  f0:	0e 94 ba 00 	call	0x174	; 0x174 <ReadState>
         state_table[State]();
-  f2:	e0 91 06 01 	lds	r30, 0x0106	; 0x800106 <__data_end>
-  f6:	f0 e0       	ldi	r31, 0x00	; 0
-  f8:	ee 0f       	add	r30, r30
-  fa:	ff 1f       	adc	r31, r31
-  fc:	e0 50       	subi	r30, 0x00	; 0
-  fe:	ff 4f       	sbci	r31, 0xFF	; 255
- 100:	01 90       	ld	r0, Z+
- 102:	f0 81       	ld	r31, Z
- 104:	e0 2d       	mov	r30, r0
- 106:	09 95       	icall
- 108:	f2 cf       	rjmp	.-28     	; 0xee <main+0x10>
+  f4:	e0 91 08 01 	lds	r30, 0x0108	; 0x800108 <__data_end>
+  f8:	f0 e0       	ldi	r31, 0x00	; 0
+  fa:	ee 0f       	add	r30, r30
+  fc:	ff 1f       	adc	r31, r31
+  fe:	e0 50       	subi	r30, 0x00	; 0
+ 100:	ff 4f       	sbci	r31, 0xFF	; 255
+ 102:	01 90       	ld	r0, Z+
+ 104:	f0 81       	ld	r31, Z
+ 106:	e0 2d       	mov	r30, r0
+ 108:	09 95       	icall
+ 10a:	f2 cf       	rjmp	.-28     	; 0xf0 <main+0x12>
 
-0000010a <SPIMasterInit>:
+0000010c <SPIMasterInit>:
 }
 
 void SPISlaveInit()
 {
     DDRB = (1<<MISO);
-    SPCR = (1<<SPE);//| (0<<MSTR);
- 10a:	84 b1       	in	r24, 0x04	; 4
- 10c:	88 62       	ori	r24, 0x28	; 40
- 10e:	84 b9       	out	0x04, r24	; 4
- 110:	80 e5       	ldi	r24, 0x50	; 80
- 112:	8c bd       	out	0x2c, r24	; 44
- 114:	08 95       	ret
+    SPCR = (1<<SPE);
+ 10c:	84 b1       	in	r24, 0x04	; 4
+ 10e:	88 62       	ori	r24, 0x28	; 40
+ 110:	84 b9       	out	0x04, r24	; 4
+ 112:	80 e5       	ldi	r24, 0x50	; 80
+ 114:	8c bd       	out	0x2c, r24	; 44
+ 116:	08 95       	ret
 
-00000116 <SPIWrite>:
+00000118 <SPIWrite>:
 }
 
 void SPIWrite(char data)
 {
     SPDR = data;
- 116:	8e bd       	out	0x2e, r24	; 46
+ 118:	8e bd       	out	0x2e, r24	; 46
     while( !(SPSR & (1<<SPIF) ));       // Wait, SPIF is set 1 on transfer complete
- 118:	0d b4       	in	r0, 0x2d	; 45
- 11a:	07 fe       	sbrs	r0, 7
- 11c:	fd cf       	rjmp	.-6      	; 0x118 <SPIWrite+0x2>
+ 11a:	0d b4       	in	r0, 0x2d	; 45
+ 11c:	07 fe       	sbrs	r0, 7
+ 11e:	fd cf       	rjmp	.-6      	; 0x11a <SPIWrite+0x2>
 }
- 11e:	08 95       	ret
+ 120:	08 95       	ret
 
-00000120 <SPIRead>:
+00000122 <SPIRead>:
 
 char SPIRead()
 {
     // TODO not sure if need to wait for read, test this
     while( !(SPSR & (1<<SPIF) ));       // Wait, SPIF is set 1 on transfer complete
- 120:	0d b4       	in	r0, 0x2d	; 45
- 122:	07 fe       	sbrs	r0, 7
- 124:	fd cf       	rjmp	.-6      	; 0x120 <SPIRead>
+ 122:	0d b4       	in	r0, 0x2d	; 45
+ 124:	07 fe       	sbrs	r0, 7
+ 126:	fd cf       	rjmp	.-6      	; 0x122 <SPIRead>
     return SPDR;
- 126:	8e b5       	in	r24, 0x2e	; 46
+ 128:	8e b5       	in	r24, 0x2e	; 46
 }
- 128:	08 95       	ret
+ 12a:	08 95       	ret
 
-0000012a <SpiState>:
-        State = IDLE_STATE;
+0000012c <SpiState>:
+    }
 }
 
 void SpiState(void)
 {
     SPIWrite(0x01);
- 12a:	81 e0       	ldi	r24, 0x01	; 1
- 12c:	0e 94 8b 00 	call	0x116	; 0x116 <SPIWrite>
-    COND_WRITE_BIT(SPIRead() == 0x02, PORTD, 0);
- 130:	0e 94 90 00 	call	0x120	; 0x120 <SPIRead>
- 134:	82 30       	cpi	r24, 0x02	; 2
- 136:	11 f4       	brne	.+4      	; 0x13c <SpiState+0x12>
- 138:	58 9a       	sbi	0x0b, 0	; 11
- 13a:	01 c0       	rjmp	.+2      	; 0x13e <SpiState+0x14>
- 13c:	58 98       	cbi	0x0b, 0	; 11
-    //if (SPIRead() == 0x02)
-        //SET_BIT(PORTD, 0);
-    //else
-        //CLR_BIT(PORTD, 0);
-    
-    Blink_LED(&PORTD, 5);
- 13e:	65 e0       	ldi	r22, 0x05	; 5
- 140:	8b e2       	ldi	r24, 0x2B	; 43
- 142:	90 e0       	ldi	r25, 0x00	; 0
- 144:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
- 148:	08 95       	ret
+ 12c:	81 e0       	ldi	r24, 0x01	; 1
+ 12e:	0e 94 8c 00 	call	0x118	; 0x118 <SPIWrite>
+    if (SPIRead() ==  0x02)
+ 132:	0e 94 91 00 	call	0x122	; 0x122 <SPIRead>
+ 136:	82 30       	cpi	r24, 0x02	; 2
+ 138:	29 f4       	brne	.+10     	; 0x144 <SpiState+0x18>
+    {
+        Blink_LED(&PORTD, 0);
+ 13a:	60 e0       	ldi	r22, 0x00	; 0
+ 13c:	8b e2       	ldi	r24, 0x2B	; 43
+ 13e:	90 e0       	ldi	r25, 0x00	; 0
+ 140:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
+    }
+    Blink_LED(&PORTD, 6); // state led
+ 144:	66 e0       	ldi	r22, 0x06	; 6
+ 146:	8b e2       	ldi	r24, 0x2B	; 43
+ 148:	90 e0       	ldi	r25, 0x00	; 0
+ 14a:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
+ 14e:	08 95       	ret
 
-0000014a <I2cState>:
+00000150 <I2cState>:
 }
 
 void I2cState(void)
 {
-    Blink_LED(&PORTD, 6);
- 14a:	66 e0       	ldi	r22, 0x06	; 6
- 14c:	8b e2       	ldi	r24, 0x2B	; 43
- 14e:	90 e0       	ldi	r25, 0x00	; 0
- 150:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
- 154:	08 95       	ret
+    Blink_LED(&PORTD, 5); // state led
+ 150:	65 e0       	ldi	r22, 0x05	; 5
+ 152:	8b e2       	ldi	r24, 0x2B	; 43
+ 154:	90 e0       	ldi	r25, 0x00	; 0
+ 156:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
+ 15a:	08 95       	ret
 
-00000156 <IdleState>:
+0000015c <IdleState>:
 }
 
 void IdleState(void)
 {
-    Blink_LED(&PORTD, 7);
- 156:	67 e0       	ldi	r22, 0x07	; 7
- 158:	8b e2       	ldi	r24, 0x2B	; 43
- 15a:	90 e0       	ldi	r25, 0x00	; 0
- 15c:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
- 160:	08 95       	ret
+    Blink_LED(&PORTD, 7); // state led
+ 15c:	67 e0       	ldi	r22, 0x07	; 7
+ 15e:	8b e2       	ldi	r24, 0x2B	; 43
+ 160:	90 e0       	ldi	r25, 0x00	; 0
+ 162:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
+ 166:	08 95       	ret
 
-00000162 <ReadState>:
-void (*state_table[])() = {SpiState, I2cState, IdleState};
+00000168 <InvalidState>:
+}
+
+void InvalidState(void)
+{
+    Blink_LED(&PORTB, 0);
+ 168:	60 e0       	ldi	r22, 0x00	; 0
+ 16a:	85 e2       	ldi	r24, 0x25	; 37
+ 16c:	90 e0       	ldi	r25, 0x00	; 0
+ 16e:	0e 94 53 00 	call	0xa6	; 0xa6 <Blink_LED>
+ 172:	08 95       	ret
+
+00000174 <ReadState>:
+void (*state_table[])() = {SpiState, I2cState, IdleState, InvalidState};
 
 void ReadState(void)
 {
     uint8_t temp;
     temp = PINC;
- 162:	86 b1       	in	r24, 0x06	; 6
+ 174:	86 b1       	in	r24, 0x06	; 6
     
-    /* This is flawed.  If PB1 and PB2 are HIGH, it will still go to SPI State and not IDLE State */
-    if ((temp & 0x02) == 0x02)  
- 164:	81 ff       	sbrs	r24, 1
- 166:	03 c0       	rjmp	.+6      	; 0x16e <ReadState+0xc>
-        State = SPI_STATE;      
- 168:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <__data_end>
- 16c:	08 95       	ret
-    else if ((temp & 0x04) == 0x04 )
- 16e:	82 ff       	sbrs	r24, 2
- 170:	04 c0       	rjmp	.+8      	; 0x17a <ReadState+0x18>
-        State = I2C_STATE;
- 172:	81 e0       	ldi	r24, 0x01	; 1
- 174:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
- 178:	08 95       	ret
-    else
-        State = IDLE_STATE;
- 17a:	82 e0       	ldi	r24, 0x02	; 2
- 17c:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <__data_end>
- 180:	08 95       	ret
+    switch (temp & 0b00000111) // PC0-2
+ 176:	87 70       	andi	r24, 0x07	; 7
+ 178:	82 30       	cpi	r24, 0x02	; 2
+ 17a:	41 f0       	breq	.+16     	; 0x18c <ReadState+0x18>
+ 17c:	84 30       	cpi	r24, 0x04	; 4
+ 17e:	49 f0       	breq	.+18     	; 0x192 <ReadState+0x1e>
+ 180:	81 30       	cpi	r24, 0x01	; 1
+ 182:	59 f4       	brne	.+22     	; 0x19a <ReadState+0x26>
+    {
+        case 0b0001: State = IDLE_STATE;    break; //PC0 hi
+ 184:	82 e0       	ldi	r24, 0x02	; 2
+ 186:	80 93 08 01 	sts	0x0108, r24	; 0x800108 <__data_end>
+ 18a:	08 95       	ret
+        case 0b0010: State = SPI_STATE;     break; //PC1 hi
+ 18c:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <__data_end>
+ 190:	08 95       	ret
+        case 0b0100: State = I2C_STATE;     break; //PC2 hi
+ 192:	81 e0       	ldi	r24, 0x01	; 1
+ 194:	80 93 08 01 	sts	0x0108, r24	; 0x800108 <__data_end>
+ 198:	08 95       	ret
+        default: State = INVALID_STATE;
+ 19a:	83 e0       	ldi	r24, 0x03	; 3
+ 19c:	80 93 08 01 	sts	0x0108, r24	; 0x800108 <__data_end>
+ 1a0:	08 95       	ret
 
-00000182 <_exit>:
- 182:	f8 94       	cli
+000001a2 <_exit>:
+ 1a2:	f8 94       	cli
 
-00000184 <__stop_program>:
- 184:	ff cf       	rjmp	.-2      	; 0x184 <__stop_program>
+000001a4 <__stop_program>:
+ 1a4:	ff cf       	rjmp	.-2      	; 0x1a4 <__stop_program>
